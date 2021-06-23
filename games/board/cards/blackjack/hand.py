@@ -59,7 +59,7 @@ class Hand:
 
     def adjust_ace(self, adjust):
         '''Method that allows the player or dealer
-        to change the value of the ace to 1
+        to change the value of the ace to 1 or let it as 11
 
         Argument:
             adjust -- boolean value indicating if the player
@@ -68,7 +68,8 @@ class Hand:
 
         if adjust:
             self.total_value -= 10
-            self.ace = False
             print('The value of the Ace has been adjusted to 1.')
         else:
             print('The Ace is going to be used as 11.')
+        # since the ace was treated we set the flag to false
+        self.ace = False
