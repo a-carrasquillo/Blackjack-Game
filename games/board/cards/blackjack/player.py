@@ -5,6 +5,7 @@ The script that contains the Player Class
 from .hand import Hand
 # import the error classes
 from .errors import NotEnoughCardsToPrint
+from .errors import NotEnoughFunds
 
 class Player:
     '''Class that simulates a player of blackjack
@@ -33,9 +34,9 @@ class Player:
         print function is called on this type of object
         '''
 
-        string = f'Player Name: {self.name}\nTotal Money: {self.total_money}\n'
-        string += f'Actual Bet: {self.bet}\n'
-        if len(self.hand.cards) > 0:
+        string = f'Player Name: {self.name}\nTotal Money: ${self.total_money}\n'
+        string += f'Actual Bet: ${self.bet}\n'
+        if len(self.hand.cards) > 1:
             for card in self.hand.cards:
                 string += f'{card.rank} of {card.suit}\t'
             return string
@@ -49,9 +50,14 @@ class Player:
             bet -- bet amount, should be an integer
         '''
 
-        self.bet = bet
-        #substract the bet from the total money
-        self.total_money -= bet
+        if self.total_money - bet >= 0:
+            self.bet = bet
+            #subtract the bet from the total money
+            self.total_money -= bet
+        else:
+            raise NotEnoughFunds('The player does not possess enough founds to perform'
+                                + f' the current bet. The current balance is {self.total_money}'
+                                + f' and the bet you are trying to place is {bet}')
 
     def clear_bet(self):
         '''Clears the current bet'''

@@ -1,8 +1,6 @@
 '''
 The script that contains the Hand Class
 '''
-# import the card class
-from ..card import Card
 
 class Hand:
     '''Class that simulates the hand of a player
