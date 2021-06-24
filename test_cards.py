@@ -32,7 +32,7 @@ class TestCard(unittest.TestCase):
         '''
         Tests that the initialization of an object is correct
         '''
-        
+
         # check for correct initialization for first card
         self.assertEqual(self.card1.suit,'Hearts')
         self.assertEqual(self.card1.rank,'Two')
@@ -55,7 +55,7 @@ class TestCard(unittest.TestCase):
         '''
         Tests that the print of a card class is correct
         '''
-        
+
         # verify first card
         self.assert_stdout(self.card1,"Two of Hearts\n")
         # verify second card
