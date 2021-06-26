@@ -149,5 +149,13 @@ class TestPlayer(unittest.TestCase):
         # verify that the cards where delete it
         self.assertEqual(len(self.player.hand.cards),0)
 
+    def test_is_active(self):
+        '''
+        Tests that when the player runs out of money, it turns into an inactive player
+        '''
+        self.assertTrue(self.player.is_active())
+        self.player.total_money = 0
+        self.assertFalse(self.player.is_active())
+
 if __name__ == '__main__':
     unittest.main()
