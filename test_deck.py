@@ -110,5 +110,9 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(card2.value, 10)
         self.assertEqual(len(self.deck.deck_of_cards), 50)
 
+    def test_length(self):
+        '''Tests that the len() function can be used directly in the object'''
+        self.assertEqual(len(self.deck),52)
+
 if __name__ == '__main__':
     unittest.main()
