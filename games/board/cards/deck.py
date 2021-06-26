@@ -38,6 +38,13 @@ class Deck:
                 #add the card to the deck
                 self.deck_of_cards.append(new_card)
 
+    def __len__(self):
+        '''
+        Give the length of the deck to the len()
+        function when we use it in the object itself
+        '''
+        return len(self.deck_of_cards)
+
     def shufflecards(self):
         '''
         Method that shuffles the deck of cards
