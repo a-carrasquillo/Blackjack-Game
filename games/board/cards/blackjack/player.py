@@ -15,6 +15,7 @@ class Player:
         total_money -- total amount of money that the player has
         hand -- cards currently in the player's hand
         bet -- current bet
+        active -- flag used to indicate if the player has money left to play
     '''
 
     def __init__(self, name, total_money):
@@ -27,6 +28,7 @@ class Player:
         self.total_money = total_money
         self.hand = Hand()
         self.bet = 0
+        self.active = True
 
     def __str__(self):
         '''
@@ -38,11 +40,10 @@ class Player:
         string += f'Actual Bet: ${self.bet}\n'
         if len(self.hand.cards) > 1:
             for card in self.hand.cards:
-                string += f'{card.rank} of {card.suit}\t'
+                string += str(card)+'\t'
             return string
-        else:
-            raise NotEnoughCardsToPrint('The player does not possess enough'
-        	    + f'cards to be printed. Currently he/she possess {len(self.hand.cards)} cards')
+        raise NotEnoughCardsToPrint('The player does not possess enough'
+            + f'cards to be printed. Currently he/she possess {len(self.hand.cards)} cards')
 
     def place_bet(self, bet):
         '''Set the current bet for the round
@@ -80,3 +81,12 @@ class Player:
         del self.hand
         # creates a new hand for the next round
         self.hand = Hand()
+
+    def is_active(self):
+        '''
+        Method used to indicate if the player has money left to play
+        Returns a boolean value indicating if the player is active.
+        '''
+        if self.total_money == 0:
+            self.active = False
+        return self.active
