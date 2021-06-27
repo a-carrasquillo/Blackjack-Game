@@ -56,7 +56,10 @@ def setup():
     players_dict = {}
     # NOTE: more players can be added
     # player initial setup
+    print('Player 1:')
     players_dict['player1'] = player_initial_setup()
+    print('Player 2:')
+    players_dict['player2'] = player_initial_setup()
 
     # create a list of suits
     suits_list = ['Hearts', 'Diamonds', 'Spades', 'Clubs']
@@ -224,7 +227,9 @@ if __name__ == '__main__':
         dealer.hand.add_card(deck.take_card())
 
         # print the dealer
+        print('\n')
         print(dealer)
+        print('\n')
 
         # iterate over the players
         for player_key in players:
@@ -240,7 +245,7 @@ if __name__ == '__main__':
 
                 # give the player the options to hit or stay
                 player_options(players[player_key], deck, dealer)
-
+                print('\n')
         # after player/s turn, flip dealer second card and print
         dealer.flip_card()
         print(dealer)
@@ -272,6 +277,7 @@ if __name__ == '__main__':
             if players[player_key].is_active():
                 # print the player
                 print(players[player_key])
+                print('\n')
 
         # reset the number of players
         number_players = 0
@@ -281,11 +287,11 @@ if __name__ == '__main__':
             if players[player_key].is_active():
                 # evaluate player total points
                 evaluate_player(players[player_key], dealer)
+                print('\n')
                 # add 1 for each active player
                 number_players += 1
 
         # clear dealer hand
         dealer = Dealer()
-        print('\n')
 
     print('Not enough players or cards to continue to play')
