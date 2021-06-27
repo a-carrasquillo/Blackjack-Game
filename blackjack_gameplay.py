@@ -145,10 +145,10 @@ def evaluate_player(player, dealer_ob):
                 dealer_points==21 and len(dealer_ob.hand.cards)>2):
             player.receive_money(player.bet*2.5)
             print('You win by Blackjack!')
-        elif (player_points>dealer_points or dealer_points>21) and player_points <=21:
+        elif (player_points>dealer_points or dealer_points>21):
             player.receive_money(player.bet*2)
             print('You win!')
-        elif player_points==dealer_points and player_points<=21: # no win nor lose
+        elif player_points==dealer_points: # no win nor lose
             player.receive_money(player.bet)
             print('You draw')
         else:
