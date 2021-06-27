@@ -4,6 +4,8 @@ The main script that contains the game play/game logic of the blackjack
 # imports
 #needed to clear the screen
 from os import system, name
+# import sleep to stop for some time period
+from time import sleep
 
 from games.board.cards.deck import Deck
 from games.board.cards.blackjack.dealer import Dealer
@@ -12,6 +14,8 @@ from games.board.cards.blackjack.errors import NotEnoughFunds
 
 def clear_screen():
     '''Function to clear the screen'''
+    # wait 3 sec before clear screen
+    sleep(3)
     #for windows OS
     if name == 'nt':
         _ = system('cls')
@@ -73,6 +77,23 @@ def setup():
 
     return (players_dict, deck_card, dealer_init)
 
+def got_an_ace(hand):
+    '''
+    Function that helps with the process of having an ace.
+    Argument:
+        hand -- hand object
+    '''
+    print('You got an ace!')
+    change_ace = ''
+    # ask if the player/dealer wants to modify the ace value
+    while change_ace.lower() not in ['y','n','yes','no']:
+        change_ace = input('Do you want to change the ace value to 1?\n')
+        # evaluate the answer
+        if change_ace.lower() in ['y', 'yes']:
+            hand.adjust_ace(True)
+        else:
+            hand.adjust_ace(False)
+
 def player_options(player, deck_card, dealer_ob):
     '''
     Function that helps us show the options to the player, collect the answer
@@ -84,12 +105,13 @@ def player_options(player, deck_card, dealer_ob):
     '''
 
     answer = 'h'
-    while answer in ('h', 'hit') and player.hand.total_value < 20:
+    while answer in ['h', 'hit'] and player.hand.total_value < 20:
+        answer = ''
         # give the player the options to hit or stay
         while answer.lower() not in ['h','s','hit','stay']:
             answer = input('Please choose if you want to hit or stay: ')
         # evaluate the option chosen
-        if answer.lower() == 'hit' or answer.lower() == 'h':
+        if answer.lower() in ['hit', 'h']:
         	# add a card
             player.hand.add_card(deck_card.take_card())
             # clear screen
@@ -100,16 +122,8 @@ def player_options(player, deck_card, dealer_ob):
             print(player)
             # check for the ace
             if player.hand.check_ace():
-                print('You got an ace!')
-                change_ace = 'n'
-                # ask if the player wants to modify the ace value
-                while change_ace.lower() not in ['y','n','yes','no']:
-                    change_ace = input('Do you want to change the ace value to 1?\n')
-                # evaluate the answer
-                if change_ace.lower() == 'y' or change_ace.lower() == 'yes':
-                    player.hand.adjust_ace(True)
-                else:
-                    player.hand.adjust_ace(False)
+                # ask the player what he/she wants to do with the ace
+                got_an_ace(player.hand)
 
 def evaluate_player(player, dealer_ob):
     '''
@@ -124,13 +138,17 @@ def evaluate_player(player, dealer_ob):
         # compare dealer points with the player
         player_points = player.hand.total_value
         dealer_points = dealer_ob.hand.total_value
-        if player_points > dealer_points and player_points != 21:
-            player.receive_money(player.bet*2)
-            print('You win!')
-        elif player_points > dealer_points and player_points == 21:
+        if (dealer_points>21 and player_points==21 and len(player.hand.cards)==2):
             player.receive_money(player.bet*2.5)
             print('You win by Blackjack!')
-        elif player_points == dealer_points: # no win nor lose
+        elif(player_points==21 and len(player.hand.cards)==2 and
+                dealer_points==21 and len(dealer_ob.hand.cards)>2):
+            player.receive_money(player.bet*2.5)
+            print('You win by Blackjack!')
+        elif (player_points>dealer_points or dealer_points>21) and player_points <=21:
+            player.receive_money(player.bet*2)
+            print('You win!')
+        elif player_points==dealer_points and player_points<=21: # no win nor lose
             player.receive_money(player.bet)
             print('You draw')
         else:
@@ -141,6 +159,10 @@ def evaluate_player(player, dealer_ob):
 
     # clear bet and hand for next round
     player.clear_bet()
+    # print player
+    print(player)
+    sleep(1)
+    #clear hand
     player.clear_hand()
 
 def bet(player):
@@ -158,18 +180,19 @@ def bet(player):
                 player.place_bet(amount)
                 break
             except NotEnoughFunds:
-                print(f'Your current bid of {amount} exceeds your'
+                print(f'Your current bid of ${amount} exceeds your'
                     + f' total money, which is ${player.total_money}.')
         except ValueError:
             print('Please enter an integer value!')
 
 # driver
 if __name__ == '__main__':
+    clear_screen()
+    print('Welcome to Blackjack 21!')
     # setup the game
     players, deck, dealer = setup()
 
-    # clear the screen
-    clear_screen()
+    print('\n')
 
     # determine the number of players
     number_players = len(players)
@@ -212,16 +235,8 @@ if __name__ == '__main__':
 
                 # check for ace in player hand
                 if players[player_key].hand.check_ace():
-                    print('You got an ace!')
-                    change = 'n'
-                    # ask if the player wants to modify the ace value
-                    while change.lower() not in ['y','n','yes','no']:
-                        change = input('Do you want to change the ace value to 1?\n')
-                    # evaluate the answer
-                    if change.lower() in ['y', 'yes']:
-                        players[player_key].hand.adjust_ace(True)
-                    else:
-                        players[player_key].hand.adjust_ace(False)
+                    # ask the player what he/she wants to do with the ace
+                    got_an_ace(players[player_key].hand)
 
                 # give the player the options to hit or stay
                 player_options(players[player_key], deck, dealer)
@@ -232,33 +247,21 @@ if __name__ == '__main__':
 
         # check for ace in dealer hand
         if dealer.hand.check_ace():
-            print('You got an ace!')
-            change = 'n'
-            # ask if the player wants to modify the ace value
-            while change.lower() not in ['y','n','yes','no']:
-                change = input('Do you want to change the ace value to 1?\n')
-            # evaluate the answer
-            if change.lower() == 'y' or change.lower() == 'yes':
-                dealer.hand.adjust_ace(True)
-            else:
-                dealer.hand.adjust_ace(False)
+            # ask the dealer what he/she wants to do with the ace
+            got_an_ace(dealer.hand)
+            sleep(2)
 
         # check the total points of the dealer, if dealer is <= 16
         # take another card and print, if dealer >= 17 stay with the hand
         while dealer.hand.total_value <= 16:
             dealer.hand.add_card(deck.take_card())
+            # print dealer hand
+            print(dealer)
             # check for ace in dealer hand
             if dealer.hand.check_ace():
-                print('You got an ace!')
-                change = 'n'
-                # ask if the player wants to modify the ace value
-                while change.lower() not in ['y','n','yes','no']:
-                    change = input('Do you want to change the ace value to 1?\n')
-                # evaluate the answer
-                if change.lower() == 'y' or change.lower() == 'yes':
-                    dealer.hand.adjust_ace(True)
-                else:
-                    dealer.hand.adjust_ace(False)
+                # ask the dealer what he/she wants to do with the ace
+                got_an_ace(dealer.hand)
+
         # clear the screen
         clear_screen()
         # print the dealer hand
@@ -283,7 +286,6 @@ if __name__ == '__main__':
 
         # clear dealer hand
         dealer = Dealer()
-        # clear the screen before the next round
-        clear_screen()
+        print('\n')
 
     print('Not enough players or cards to continue to play')

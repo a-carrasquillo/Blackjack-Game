@@ -68,7 +68,7 @@ class TestDealer(unittest.TestCase):
         self.dealer.hand.add_card(card1)
         self.dealer.hand.add_card(card2)
         # test the print
-        self.assert_stdout(self.dealer,"Two of Hearts\tFACING DOWN\n")
+        self.assert_stdout(self.dealer,"Dealer\nTwo of Hearts\tFACING DOWN\n")
 
     def test_print_two_cards_second_flipped(self):
         '''
@@ -84,7 +84,7 @@ class TestDealer(unittest.TestCase):
         # flip the second card
         self.dealer.flip_card()
         # test the print
-        self.assert_stdout(self.dealer,"Two of Hearts\tJack of Clubs\t\n")
+        self.assert_stdout(self.dealer,"Dealer\nTwo of Hearts\tJack of Clubs\t\n")
 
     def test_print_one_card(self):
         '''
