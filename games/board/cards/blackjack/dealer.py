@@ -33,12 +33,12 @@ class Dealer:
         print function is called on this type of object
         '''
         if(not(self.flipped) and len(self.hand.cards)>1):
-            return f'{self.hand.cards[0].rank} of {self.hand.cards[0].suit}\tFACING DOWN'
+            return 'Dealer\n'+str(self.hand.cards[0])+'\tFACING DOWN'
         elif(self.flipped and len(self.hand.cards)>1):
             string = ""
             for card in self.hand.cards:
-                string += f'{card.rank} of {card.suit}\t'
-            return string
+                string += str(card)+'\t'
+            return 'Dealer\n'+string
         else:
             raise NotEnoughCardsToPrint('The dealer does not possess enough'
                 + f'cards to be printed. Currently he/she possess {len(self.hand.cards)} cards')
